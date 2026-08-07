@@ -242,9 +242,10 @@
 
         .card-top-content { display: flex; flex-direction: row; align-items: flex-start; gap: 12px; width: 100%; }
         
+        /* أبعاد صور أول قسمين (المشويات والوجبات): 105px x 105px */
         .card-image-wrapper { 
-            width: 95px; 
-            height: 95px; 
+            width: 105px; 
+            height: 105px; 
             border-radius: 12px; 
             overflow: hidden; 
             flex-shrink: 0; 
@@ -255,7 +256,7 @@
         .food-card .item-img { width: 100%; height: 100%; object-fit: cover; }
         .card-details-wrapper { display: flex; flex-direction: column; gap: 4px; text-align: right; flex: 1; min-width: 0; }
 
-        /* ضبط تنسيق اسم الصنف ليتمدد تلقائياً ويمنع قطع الكلمات */
+        /* تنسيق اسم الصنف القياسي */
         .food-name { 
             font-weight: 800; 
             font-size: 0.95rem; 
@@ -267,6 +268,28 @@
         }
         
         .food-ingredients { font-size: 0.72rem; color: var(--card-desc-text); font-weight: 600; line-height: 1.3; display: block; }
+
+        /* ================= كروت المنيو لباقي الأقسام (أبعاد الصورة: 95px x 95px) ================= */
+        .food-card.compact-card {
+            padding: 8px 12px;
+            gap: 4px;
+        }
+        
+        .food-card.compact-card .card-image-wrapper {
+            width: 95px;
+            height: 95px;
+            border-radius: 12px;
+        }
+
+        .food-card.compact-card .card-top-content {
+            align-items: center;
+            gap: 10px;
+        }
+
+        .food-card.compact-card .card-bottom-content {
+            margin-top: 2px;
+            padding-top: 6px;
+        }
 
         /* ================= خيارات الحجم ================= */
         .custom-options-container {
@@ -1767,6 +1790,10 @@
             const filtered = menuData.filter(i => i.category === cat);
             const openNow = isWorkingHours();
 
+            const cleanCatName = cat ? cat.trim() : "";
+            // استثناء قسمي "المشويات" و "الوجبات" فقط، وباقي الأقسام تكون أبعاد صورها 95px x 95px
+            const isCompactCat = (cleanCatName !== "المشويات" && cleanCatName !== "الوجبات");
+
             document.getElementById('menuList').innerHTML = filtered.map(item => {
                 let ingredientsElement = item.desc ? `<span class="food-ingredients">${item.desc.trim()}</span>` : "";
 
@@ -1809,9 +1836,10 @@
                 const btnClass = isDisabled ? "add-btn out-of-stock-mode" : "add-btn";
                 const disabledAttr = isDisabled ? "disabled" : "";
                 const sizeDataAttr = item.hasSizes ? `حجم ${currentSize}` : "";
+                const cardClass = isCompactCat ? "food-card compact-card" : "food-card";
 
                 return `
-                <div class="food-card" id="card-${item.id}">
+                <div class="${cardClass}" id="card-${item.id}">
                     <div class="card-top-content">
                         <div class="card-image-wrapper">
                             <img class="item-img" src="${IMAGES_PATH}${item.name}.jpg" onerror="this.onerror=null; this.src='${IMAGES_PATH}default.jpg';">
