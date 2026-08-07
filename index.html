@@ -112,7 +112,7 @@
         
         .loader-counter { font-size: 1.2rem; font-weight: 800; color: #ffffff; margin-top: 8px; font-variant-numeric: tabular-nums; }
         .loading-bar { width: 180px; height: 7px; background: rgba(255, 255, 255, 0.15); margin: 12px auto 0 auto; border-radius: 10px; overflow: hidden; }
-        .loading-bar span { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, var(--brand-red) 0%, #c44300 100%); box-shadow: 0 0 10px var(--brand-red); border-radius: 10px; transition: width 0.2s ease; }
+        .loading-bar span { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, var(--brand-red) 0%, #c44300 100%); box-shadow: 0 0 10px var(--brand-red); border-radius: 10px; transition: width 0.1s linear; }
         .splash-hidden { transform: translateY(-100%); pointer-events: none; }
 
         /* ================= الهيدر الداخلي ================= */
@@ -1129,6 +1129,32 @@
             }
         }
 
+        /* تحريك شاشة التحميل ليكتمل العداد في غضون 3.5 ثانية دقيقة بسلاسة */
+        function animateSplashScreen(duration = 3500) {
+            const counterEl = document.getElementById('loadCounter');
+            const progressEl = document.getElementById('loadProgress');
+            const splash = document.getElementById('splash-screen');
+            
+            let start = null;
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+                let percentage = Math.min(Math.floor((progress / duration) * 100), 100);
+                
+                if (counterEl) counterEl.innerText = `${percentage}%`;
+                if (progressEl) progressEl.style.width = `${percentage}%`;
+                
+                if (progress < duration) {
+                    requestAnimationFrame(step);
+                } else {
+                    setTimeout(() => {
+                        if (splash) splash.classList.add('splash-hidden');
+                    }, 300);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
         db.ref('global_restaurant_status').on('value', (snapshot) => {
             const status = snapshot.val() || 'open';
             isGlobalStoreOpen = (status === 'open');
@@ -1530,6 +1556,7 @@
             if (themeBtn) themeBtn.addEventListener('click', handleThemeToggle);
 
             requestNotificationPermission();
+            animateSplashScreen(3500); // إتمام التحميل في غضون 3.5 ثانية دقيقة
             loadMenuFromSheet();
             renderZoneList();
             listenForUserChatBackground();
@@ -1585,8 +1612,6 @@
 
         async function loadMenuFromSheet(isBackgroundSync = false) {
             if (!SHEET_CSV_URL) return;
-            const counterEl = document.getElementById('loadCounter');
-            const progressEl = document.getElementById('loadProgress');
 
             try {
                 const response = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
@@ -1657,32 +1682,8 @@
                     }
                 }
 
-                if (!isBackgroundSync) {
-                    const categories = [...new Set(menuData.map(item => item.category))];
-                    const catImages = categories.map(cat => `${IMAGES_PATH}${cat}.jpg`);
-                    const itemImages = menuData.map(item => `${IMAGES_PATH}${item.name}.jpg`);
-                    const allImagesToPreload = [...new Set([...catImages, ...itemImages])];
-
-                    preloadAllImages(allImagesToPreload, (loaded, total) => {
-                        const percent = Math.floor((loaded / total) * 100);
-                        if(counterEl) counterEl.innerText = `${percent}%`;
-                        if(progressEl) progressEl.style.width = `${percent}%`;
-                    }, () => {
-                        if(counterEl) counterEl.innerText = `100%`;
-                        if(progressEl) progressEl.style.width = `100%`;
-                        setTimeout(() => {
-                            const splash = document.getElementById('splash-screen');
-                            if(splash) splash.classList.add('splash-hidden');
-                        }, 400);
-                    });
-                }
-
             } catch (error) {
                 console.error("خطأ أثناء تحميل المنيو من Google Sheet:", error);
-                if (!isBackgroundSync) {
-                    const splash = document.getElementById('splash-screen');
-                    if(splash) splash.classList.add('splash-hidden');
-                }
             }
         }
 
@@ -1753,20 +1754,6 @@
                 if (deliveryRow) deliveryRow.style.display = 'none';
             }
             updateCart();
-        }
-
-        function preloadAllImages(urls, onProgress, onComplete) {
-            if (urls.length === 0) { onComplete(); return; }
-            let loadedCount = 0;
-            urls.forEach(url => {
-                const img = new Image();
-                img.src = url;
-                img.onload = img.onerror = () => {
-                    loadedCount++;
-                    onProgress(loadedCount, urls.length);
-                    if (loadedCount === urls.length) onComplete();
-                };
-            });
         }
 
         function setPizzaSize(itemId, size) {
