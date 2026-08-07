@@ -96,7 +96,7 @@
         .loader-logo-final {
             width: 210px; 
             height: 210px; 
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             background-image: url('./images/logooo.png');
             background-size: cover; 
             background-position: center;
@@ -110,8 +110,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
         
-        .loader-slogan { font-size: 1.15rem; font-weight: 800; color: var(--brand-red); text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-top: 10px; }
-        .loader-counter { font-size: 1.2rem; font-weight: 800; color: #ffffff; margin-top: 15px; font-variant-numeric: tabular-nums; }
+        .loader-counter { font-size: 1.2rem; font-weight: 800; color: #ffffff; margin-top: 8px; font-variant-numeric: tabular-nums; }
         .loading-bar { width: 180px; height: 7px; background: rgba(255, 255, 255, 0.15); margin: 12px auto 0 auto; border-radius: 10px; overflow: hidden; }
         .loading-bar span { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, var(--brand-red) 0%, #c44300 100%); box-shadow: 0 0 10px var(--brand-red); border-radius: 10px; transition: width 0.2s ease; }
         .splash-hidden { transform: translateY(-100%); pointer-events: none; }
@@ -821,7 +820,6 @@
     <div id="splash-screen">
         <div class="loader-content">
             <div class="loader-logo-final"></div>
-            <p class="loader-slogan">#مشويات_الأسمر 🥩</p>
             <div class="loader-counter" id="loadCounter">0%</div>
             <div class="loading-bar"><span id="loadProgress"></span></div>
         </div>
