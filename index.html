@@ -256,10 +256,10 @@
         .food-card .item-img { width: 100%; height: 100%; object-fit: cover; }
         .card-details-wrapper { display: flex; flex-direction: column; gap: 4px; text-align: right; flex: 1; min-width: 0; }
 
-        /* تنسيق اسم الصنف القياسي */
+        /* تكبير اسم الصنف ليكون واضحاً للمستخدم */
         .food-name { 
             font-weight: 800; 
-            font-size: 0.95rem; 
+            font-size: 1.05rem; 
             color: var(--card-text); 
             white-space: normal; 
             word-break: break-word; 
@@ -269,15 +269,15 @@
         
         .food-ingredients { font-size: 0.72rem; color: var(--card-desc-text); font-weight: 600; line-height: 1.3; display: block; }
 
-        /* ================= كروت المنيو لباقي الأقسام (أبعاد الصورة: 95px x 95px) ================= */
+        /* ================= كروت المنيو لباقي الأقسام (أبعاد الصورة: 100px x 100px) ================= */
         .food-card.compact-card {
             padding: 8px 12px;
             gap: 4px;
         }
         
         .food-card.compact-card .card-image-wrapper {
-            width: 95px;
-            height: 95px;
+            width: 100px;
+            height: 100px;
             border-radius: 12px;
         }
 
@@ -374,9 +374,18 @@
         .add-btn.success-state { background: #dcfce7 !important; color: #15803d !important; border: 1.5px solid #16a34a !important; pointer-events: none; }
 
         .price-container-leftish { display: flex; align-items: center; margin-left: auto; padding-right: 2px; }
-        .food-price { font-weight: 900; color: var(--brand-red); font-size: 1.15rem; display: inline-flex; align-items: baseline; gap: 2px; }
+        
+        /* تكبير حجم خط السعر ليبدو بارزاً وواضحاً */
+        .food-price { 
+            font-weight: 900; 
+            color: var(--brand-red); 
+            font-size: 1.28rem; 
+            display: inline-flex; 
+            align-items: baseline; 
+            gap: 2px; 
+        }
         .price-num { font-weight: 900; }
-        .price-txt { font-size: 0.72rem; font-weight: 800; color: var(--brand-red); }
+        .price-txt { font-size: 0.75rem; font-weight: 800; color: var(--brand-red); }
 
         /* ================= شريط تتبع الطلب ================= */
         .user-order-tracker-bar {
@@ -1791,7 +1800,7 @@
             const openNow = isWorkingHours();
 
             const cleanCatName = cat ? cat.trim() : "";
-            // استثناء قسمي "المشويات" و "الوجبات" فقط، وباقي الأقسام تكون أبعاد صورها 95px x 95px
+            // استثناء قسمي "المشويات" و "الوجبات" فقط، وباقي الأقسام تكون أبعاد صورها 100px x 100px
             const isCompactCat = (cleanCatName !== "المشويات" && cleanCatName !== "الوجبات");
 
             document.getElementById('menuList').innerHTML = filtered.map(item => {
