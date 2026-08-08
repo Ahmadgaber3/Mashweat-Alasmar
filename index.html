@@ -22,9 +22,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     
     <style>
-        /* ================= الثيمات المتغيرة ================= */
+        /* ================= الثيمات المتغيرة (الخلفية البيج مع الحفاظ على الألوان الأصلية) ================= */
         :root, [data-theme="light"] {
-            --bg: #ffffff;
+            --bg: #f3f1e9; /* لون الخلفية البيج الهادئ */
             --card-inner-bg: #ffffff; 
             --card-outer-border: #cbd5e1; 
             --card-text: #0f172a; 
@@ -34,10 +34,10 @@
             --brand-red: #e55300; 
             --button-black: #1f1f1f; 
             --white: #ffffff; 
-            --header-bg: #ffffff; 
+            --header-bg: #f3f1e9; 
             --card-shadow: 0 6px 16px rgba(15, 23, 42, 0.08); 
             --border-color: #cbd5e1; 
-            --input-bg: #f8fafc;
+            --input-bg: #ffffff;
             
             --btn-unselected-bg: #e2e8f0;
             --btn-unselected-text: #334155;
@@ -224,12 +224,12 @@
         } 
         .cat-item.active span { color: var(--main-text); font-weight: 900; }
 
-        /* ================= قائمة الكروت ================= */
+        /* ================= قائمة الكروت الرئيسية (حواف 24px) ================= */
         .menu-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; max-width: 600px; margin: auto; min-height: 400px; background: transparent; }
         
         .food-card { 
             background: var(--card-inner-bg); 
-            border-radius: 16px; 
+            border-radius: 24px; /* الحواف الدائرية الانسيابية كما في الصورة */
             display: flex; 
             flex-direction: column; 
             padding: 12px; 
@@ -245,7 +245,7 @@
         .card-image-wrapper { 
             width: 105px; 
             height: 105px; 
-            border-radius: 12px; 
+            border-radius: 16px; 
             overflow: hidden; 
             flex-shrink: 0; 
             background: var(--card-inner-bg); 
@@ -255,7 +255,6 @@
         .food-card .item-img { width: 100%; height: 100%; object-fit: cover; }
         .card-details-wrapper { display: flex; flex-direction: column; gap: 4px; text-align: right; flex: 1; min-width: 0; }
 
-        /* تكبير اسم الصنف ليكون واضحاً للمستخدم */
         .food-name { 
             font-weight: 800; 
             font-size: 1.05rem; 
@@ -277,7 +276,7 @@
         .food-card.compact-card .card-image-wrapper {
             width: 100px;
             height: 100px;
-            border-radius: 12px;
+            border-radius: 16px;
         }
 
         .food-card.compact-card .card-top-content {
@@ -374,7 +373,6 @@
 
         .price-container-leftish { display: flex; align-items: center; margin-left: auto; padding-right: 2px; }
         
-        /* تكبير حجم خط السعر ليبدو بارزاً وواضحاً */
         .food-price { 
             font-weight: 900; 
             color: var(--brand-red); 
@@ -1129,7 +1127,6 @@
             }
         }
 
-        /* تحريك شاشة التحميل ليكتمل العداد في غضون 3.5 ثانية دقيقة بسلاسة */
         function animateSplashScreen(duration = 3500) {
             const counterEl = document.getElementById('loadCounter');
             const progressEl = document.getElementById('loadProgress');
@@ -1556,7 +1553,7 @@
             if (themeBtn) themeBtn.addEventListener('click', handleThemeToggle);
 
             requestNotificationPermission();
-            animateSplashScreen(3500); // إتمام التحميل في غضون 3.5 ثانية دقيقة
+            animateSplashScreen(3500); 
             loadMenuFromSheet();
             renderZoneList();
             listenForUserChatBackground();
@@ -1785,7 +1782,6 @@
             const openNow = isWorkingHours();
 
             const cleanCatName = cat ? cat.trim() : "";
-            // استثناء قسمي "المشويات" و "الوجبات" فقط، وباقي الأقسام تكون أبعاد صورها 100px x 100px
             const isCompactCat = (cleanCatName !== "المشويات" && cleanCatName !== "الوجبات");
 
             document.getElementById('menuList').innerHTML = filtered.map(item => {
