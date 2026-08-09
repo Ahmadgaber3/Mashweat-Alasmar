@@ -241,9 +241,10 @@
 
         .card-top-content { display: flex; flex-direction: row; align-items: flex-start; gap: 12px; width: 100%; }
         
+        /* أبعاد صور أول قسمين (المشويات والوجبات): 120px x 120px */
         .card-image-wrapper { 
-            width: 105px; 
-            height: 105px; 
+            width: 120px; 
+            height: 120px; 
             border-radius: 16px; 
             overflow: hidden; 
             flex-shrink: 0; 
@@ -273,7 +274,7 @@
             margin-top: 2px;
         }
 
-        /* كروت لباقي الأقسام */
+        /* كروت لباقي الأقسام (أبعاد الصورة 100px × 100px) */
         .food-card.compact-card {
             padding: 8px 12px;
             gap: 4px;
@@ -295,7 +296,7 @@
             padding-top: 6px;
         }
 
-        /* ================= خيارات الأحجام البسيطة والأنيقة ================= */
+        /* ================= أزرار اختيار الأحجام البسيطة والأنيقة ================= */
         .custom-options-container {
             margin-top: 6px;
             display: flex;
@@ -1613,6 +1614,7 @@
             return lines;
         }
 
+        /* قراءة الشيت وتحليل أرقام الخانات D, E, F كأحجام */
         async function loadMenuFromSheet(isBackgroundSync = false) {
             if (!SHEET_CSV_URL) return;
 
@@ -1654,7 +1656,11 @@
                         pS = priceFromColC;
                     }
 
-                    let hasMultipleSizes = (pM > 0 && pM !== pS) || (pL > 0 && pL !== pS);
+                    let cleanItemName = itemName.toLowerCase();
+                    let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
+
+                    // التعرف التلقائي على الأحجام المتعددة عند وجود أسعار بالخانات أو إذا كان أصناف الأرز
+                    let hasMultipleSizes = (pM > 0) || (pL > 0) || isRiceItem;
 
                     parsedMenu.push({
                         id: i,
@@ -1662,7 +1668,11 @@
                         name: itemName,
                         desc: desc,
                         hasSizes: hasMultipleSizes,
-                        prices: { S: pS, M: pM || pS, L: pL || pM || pS }
+                        prices: { 
+                            S: pS, 
+                            M: pM || (isRiceItem ? pS + 10 : pS), 
+                            L: pL || (isRiceItem ? pS + 20 : pS) 
+                        }
                     });
                 }
 
@@ -1758,6 +1768,7 @@
             updateCart();
         }
 
+        /* دالة تبديل الحجم والأسعار عند الضغط على الأزرار الثلاثة */
         function setPizzaSize(itemId, size) {
             itemSizeSelection[itemId] = size;
             const item = menuData.find(i => i.id === itemId);
