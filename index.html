@@ -130,6 +130,21 @@
             border-radius: 22px; 
         }
 
+        .header-address-bar {
+            margin-top: 6px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--main-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background: var(--input-bg);
+            padding: 3px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
         .store-status-banner {
             width: 100%;
             text-align: center;
@@ -532,8 +547,6 @@
 
         /* ================= الفوتر ================= */
         .restaurant-footer { position: relative; padding: 25px 15px; text-align: center; background: var(--header-bg); border-top: 1px solid var(--border-color); margin-top: 25px; padding-bottom: 35px; }
-        .footer-address-bar { font-size: 0.78rem; font-weight: 700; color: var(--main-text); display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 15px; padding: 10px; background: var(--input-bg); border-radius: 12px; border: 1px solid var(--border-color); }
-        .footer-address-label { color: var(--brand-red); font-weight: 800; }
         .footer-phones a { display: inline-block; color: var(--desc-text); text-decoration: none; font-weight: 800; font-size: 0.95rem; margin: 4px 8px; }
         .footer-rights { font-size: 0.68rem; color: var(--main-text); font-weight: 600; margin-bottom: 5px; }
         .dev-credit { font-size: 0.72rem; color: var(--desc-text); font-weight: 700; }
@@ -845,6 +858,9 @@
 
             <div class="header-top">
                 <div class="header-logo-final"></div>
+                <div class="header-address-bar">
+                    <span>📍 السويس - بورتوفيق - باب 5</span>
+                </div>
             </div>
 
             <!-- زر السلة وزر لوحة التحكم العلوية -->
@@ -893,11 +909,6 @@
 
     <!-- الفوتر -->
     <footer class="restaurant-footer">
-        <div class="footer-address-bar">
-            <span class="footer-address-label">📍 العنوان:</span>
-            <span class="footer-address-text">السويس - بورتوفيق - باب 5</span>
-        </div>
-
         <div class="footer-phones">
             <span style="font-weight: 800; font-size: 0.8rem; display: block; margin-bottom: 5px;">📞 أرقام الطلبات والواتساب:</span>
             <a href="tel:01010504425">01010504425</a> | <a href="tel:0122143939">0122143939</a>
