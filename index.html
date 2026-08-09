@@ -224,7 +224,7 @@
         } 
         .cat-item.active span { color: var(--main-text); font-weight: 900; }
 
-        /* ================= قائمة الكروت الرئيسية (حواف 24px) ================= */
+        /* ================= قائمة الكروت الرئيسية ================= */
         .menu-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; max-width: 600px; margin: auto; min-height: 400px; background: transparent; }
         
         .food-card { 
@@ -241,7 +241,6 @@
 
         .card-top-content { display: flex; flex-direction: row; align-items: flex-start; gap: 12px; width: 100%; }
         
-        /* أبعاد صور أول قسمين (المشويات والوجبات): 105px x 105px */
         .card-image-wrapper { 
             width: 105px; 
             height: 105px; 
@@ -265,7 +264,6 @@
             width: 100%; 
         }
         
-        /* تنسيق المكونات تحت الوجبة */
         .food-ingredients { 
             font-size: 0.78rem; 
             color: var(--card-desc-text); 
@@ -275,7 +273,7 @@
             margin-top: 2px;
         }
 
-        /* ================= كروت المنيو لباقي الأقسام (أبعاد الصورة: 100px x 100px) ================= */
+        /* كروت لباقي الأقسام */
         .food-card.compact-card {
             padding: 8px 12px;
             gap: 4px;
@@ -297,17 +295,17 @@
             padding-top: 6px;
         }
 
-        /* ================= خيارات الحجم ================= */
+        /* ================= خيارات الأحجام البسيطة والأنيقة ================= */
         .custom-options-container {
             margin-top: 6px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
         }
 
         .option-title {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 800;
             color: var(--desc-text);
         }
@@ -320,12 +318,12 @@
 
         .simple-pill-btn {
             flex: 1;
-            padding: 4px 0;
-            border-radius: 8px;
+            padding: 5px 0;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--input-bg);
             color: var(--main-text);
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             font-weight: 800;
             cursor: pointer;
             text-align: center;
@@ -1769,10 +1767,12 @@
             const priceNumEl = document.getElementById(`price-num-${itemId}`);
             const actionBtn = document.getElementById(`btn-${itemId}`);
 
+            let sizeArabic = size === 'S' ? 'صغير' : (size === 'M' ? 'وسط' : 'كبير');
+
             if (priceNumEl) priceNumEl.innerText = selectedPrice;
             if (actionBtn) {
                 actionBtn.setAttribute('data-price', selectedPrice);
-                actionBtn.setAttribute('data-size', `حجم ${size}`);
+                actionBtn.setAttribute('data-size', `حجم ${sizeArabic}`);
             }
 
             const card = document.getElementById(`card-${itemId}`);
@@ -1806,9 +1806,9 @@
                     <div class="custom-options-container">
                         <span class="option-title">الحجم:</span>
                         <div class="simple-option-pills">
-                            <button type="button" class="simple-pill-btn ${currentSize === 'S' ? 'active' : ''}" data-size="S" onclick="setPizzaSize(${item.id}, 'S')">صغير/S</button>
-                            <button type="button" class="simple-pill-btn ${currentSize === 'M' ? 'active' : ''}" data-size="M" onclick="setPizzaSize(${item.id}, 'M')">وسط/M</button>
-                            <button type="button" class="simple-pill-btn ${currentSize === 'L' ? 'active' : ''}" data-size="L" onclick="setPizzaSize(${item.id}, 'L')">كبير/L</button>
+                            <button type="button" class="simple-pill-btn ${currentSize === 'S' ? 'active' : ''}" data-size="S" onclick="setPizzaSize(${item.id}, 'S')">صغير</button>
+                            <button type="button" class="simple-pill-btn ${currentSize === 'M' ? 'active' : ''}" data-size="M" onclick="setPizzaSize(${item.id}, 'M')">وسط</button>
+                            <button type="button" class="simple-pill-btn ${currentSize === 'L' ? 'active' : ''}" data-size="L" onclick="setPizzaSize(${item.id}, 'L')">كبير</button>
                         </div>
                     </div>`;
                 }
@@ -1832,7 +1832,9 @@
 
                 const btnClass = isDisabled ? "add-btn out-of-stock-mode" : "add-btn";
                 const disabledAttr = isDisabled ? "disabled" : "";
-                const sizeDataAttr = item.hasSizes ? `حجم ${currentSize}` : "";
+                
+                let initialSizeArabic = currentSize === 'S' ? 'صغير' : (currentSize === 'M' ? 'وسط' : 'كبير');
+                const sizeDataAttr = item.hasSizes ? `حجم ${initialSizeArabic}` : "";
                 const cardClass = isCompactCat ? "food-card compact-card" : "food-card";
 
                 return `
