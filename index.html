@@ -288,7 +288,7 @@
             margin-top: 2px;
         }
 
-        /* ================= كروت بنر عريضة لقسمي المشويات والوجبات ================= */
+        /* ================= كروت بنر عريضة بالنسق الدقيق (2.2:1) لأول قسمين ================= */
         .food-card.banner-card {
             padding: 14px;
             gap: 8px;
@@ -301,7 +301,8 @@
 
         .food-card.banner-card .card-image-wrapper {
             width: 100%;
-            height: 175px;
+            aspect-ratio: 2.2 / 1;
+            height: auto;
             border-radius: 18px;
         }
 
@@ -1827,7 +1828,11 @@
             const openNow = isWorkingHours();
 
             const cleanCatName = cat ? cat.trim() : "";
-            const isWideCat = (cleanCatName === "المشويات" || cleanCatName === "الوجبات");
+            
+            // تحديد أول قسمين ديناميكياً ليتم عرض كروتهم بالبُنر العريض 2.2:1
+            const allCategories = [...new Set(menuData.map(item => item.category))];
+            const firstTwoCategories = allCategories.slice(0, 2);
+            const isWideCat = firstTwoCategories.includes(cleanCatName) || cleanCatName === "المشويات" || cleanCatName === "الوجبات";
 
             document.getElementById('menuList').innerHTML = filtered.map(item => {
                 let ingredientsElement = item.desc ? `<span class="food-ingredients">${item.desc.trim()}</span>` : "";
