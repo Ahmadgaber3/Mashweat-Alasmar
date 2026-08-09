@@ -256,7 +256,6 @@
 
         .card-top-content { display: flex; flex-direction: row; align-items: flex-start; gap: 12px; width: 100%; }
         
-        /* أبعاد صور أول قسمين (المشويات والوجبات): 120px x 120px */
         .card-image-wrapper { 
             width: 120px; 
             height: 120px; 
@@ -287,6 +286,23 @@
             line-height: 1.35; 
             display: block; 
             margin-top: 2px;
+        }
+
+        /* ================= كروت بنر عريضة لقسمي المشويات والوجبات ================= */
+        .food-card.banner-card {
+            padding: 14px;
+            gap: 8px;
+        }
+
+        .food-card.banner-card .card-top-content {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .food-card.banner-card .card-image-wrapper {
+            width: 100%;
+            height: 175px;
+            border-radius: 18px;
         }
 
         /* كروت لباقي الأقسام (أبعاد الصورة 100px × 100px) */
@@ -1811,7 +1827,7 @@
             const openNow = isWorkingHours();
 
             const cleanCatName = cat ? cat.trim() : "";
-            const isCompactCat = (cleanCatName !== "المشويات" && cleanCatName !== "الوجبات");
+            const isWideCat = (cleanCatName === "المشويات" || cleanCatName === "الوجبات");
 
             document.getElementById('menuList').innerHTML = filtered.map(item => {
                 let ingredientsElement = item.desc ? `<span class="food-ingredients">${item.desc.trim()}</span>` : "";
@@ -1857,7 +1873,8 @@
                 
                 let initialSizeArabic = currentSize === 'S' ? 'صغير' : (currentSize === 'M' ? 'وسط' : 'كبير');
                 const sizeDataAttr = item.hasSizes ? `حجم ${initialSizeArabic}` : "";
-                const cardClass = isCompactCat ? "food-card compact-card" : "food-card";
+                
+                const cardClass = isWideCat ? "food-card banner-card" : "food-card compact-card";
 
                 return `
                 <div class="${cardClass}" id="card-${item.id}">
