@@ -22,13 +22,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     
     <style>
-        /* ================= الثيمات المتغيرة (الخلفية البيج مع الحفاظ على الألوان الأصلية) ================= */
+        /* ================= الثيمات المتغيرة ================= */
         :root, [data-theme="light"] {
-            --bg: #f3f1e9; /* لون الخلفية البيج الهادئ */
+            --bg: #f3f1e9; 
             --card-inner-bg: #ffffff; 
             --card-outer-border: #cbd5e1; 
             --card-text: #0f172a; 
-            --card-desc-text: #475569; 
+            --card-desc-text: #64748b; 
             --main-text: #0f172a; 
             --desc-text: #64748b; 
             --brand-red: #e55300; 
@@ -229,7 +229,7 @@
         
         .food-card { 
             background: var(--card-inner-bg); 
-            border-radius: 24px; /* الحواف الدائرية الانسيابية كما في الصورة */
+            border-radius: 24px; 
             display: flex; 
             flex-direction: column; 
             padding: 12px; 
@@ -265,7 +265,15 @@
             width: 100%; 
         }
         
-        .food-ingredients { font-size: 0.72rem; color: var(--card-desc-text); font-weight: 600; line-height: 1.3; display: block; }
+        /* تنسيق المكونات تحت الوجبة */
+        .food-ingredients { 
+            font-size: 0.78rem; 
+            color: var(--card-desc-text); 
+            font-weight: 600; 
+            line-height: 1.35; 
+            display: block; 
+            margin-top: 2px;
+        }
 
         /* ================= كروت المنيو لباقي الأقسام (أبعاد الصورة: 100px x 100px) ================= */
         .food-card.compact-card {
@@ -1638,6 +1646,7 @@
 
                     if (!itemName || itemName.toLowerCase() === 'name' || itemName.toLowerCase() === 'اسم الصنف' || itemName.toLowerCase() === 'الصنف') continue;
 
+                    let desc = (row[2] && isNaN(cleanPrice(row[2]))) ? row[2].trim() : "";
                     let priceFromColC = cleanPrice(row[2]);
                     let pS = cleanPrice(row[3]); 
                     let pM = cleanPrice(row[4]); 
@@ -1646,8 +1655,6 @@
                     if (pS === 0 && priceFromColC > 0) {
                         pS = priceFromColC;
                     }
-
-                    let desc = "";
 
                     let hasMultipleSizes = (pM > 0 && pM !== pS) || (pL > 0 && pL !== pS);
 
