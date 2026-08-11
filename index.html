@@ -1146,7 +1146,7 @@
 
         function requestNotificationPermission() {
             if ("Notification" in window) {
-                Notification.permission === "granted" || Notification.requestPermission();
+                Notification.requestPermission();
             }
         }
 
@@ -1683,53 +1683,23 @@
                         pS = priceFromColC;
                     }
 
-                    let cleanCatName = catName.trim().toLowerCase();
-                    let isGrillCat = cleanCatName.includes("مشويات") || cleanCatName === "المشويات";
+                    let cleanItemName = itemName.toLowerCase();
+                    let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
 
-                    if (isGrillCat) {
-                        // كل أصناف المشويات تحصل على أحجام الأوزان الكيلو والنص والربع والثمن بنسب دقيقة
-                        let baseKiloPrice = pS > 0 ? pS : (priceFromColC > 0 ? priceFromColC : 800);
-                        
-                        parsedMenu.push({
-                            id: i,
-                            category: catName,
-                            name: itemName,
-                            desc: desc,
-                            hasSizes: true,
-                            isGrill: true,
-                            prices: { 
-                                K: baseKiloPrice, 
-                                H: Math.round(baseKiloPrice * 0.5), 
-                                Q: Math.round(baseKiloPrice * 0.25),
-                                E: Math.round(baseKiloPrice * 0.125)
-                            }
-                        });
-                    } else {
-                        // باقي أقسام المنيو العادية
-                        let cleanItemName = itemName.toLowerCase();
-                        let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
-                        let isPigeonItem = cleanItemName.includes("حمام") || cleanItemName.includes("الحمام");
+                    let hasMultipleSizes = (pM > 0) || (pL > 0) || isRiceItem;
 
-                        if (isPigeonItem) {
-                            pS = 200;
+                    parsedMenu.push({
+                        id: i,
+                        category: catName,
+                        name: itemName,
+                        desc: desc,
+                        hasSizes: hasMultipleSizes,
+                        prices: { 
+                            S: pS, 
+                            M: pM || (isRiceItem ? pS + 10 : pS), 
+                            L: pL || (isRiceItem ? pS + 20 : pS) 
                         }
-
-                        let hasMultipleSizes = ((pM > 0) || (pL > 0) || isRiceItem) && !isPigeonItem;
-
-                        parsedMenu.push({
-                            id: i,
-                            category: catName,
-                            name: itemName,
-                            desc: desc,
-                            hasSizes: hasMultipleSizes,
-                            isGrill: false,
-                            prices: { 
-                                S: pS, 
-                                M: isPigeonItem ? 200 : (pM || (isRiceItem ? pS + 10 : pS)), 
-                                L: isPigeonItem ? 200 : (pL || (isRiceItem ? pS + 20 : pS)) 
-                            }
-                        });
-                    }
+                    });
                 }
 
                 if (parsedMenu.length > 0) {
@@ -1833,14 +1803,7 @@
             const priceNumEl = document.getElementById(`price-num-${itemId}`);
             const actionBtn = document.getElementById(`btn-${itemId}`);
 
-            let sizeArabic = "";
-            if (size === 'K') sizeArabic = 'كيلو';
-            else if (size === 'H') sizeArabic = 'نص كيلو';
-            else if (size === 'Q') sizeArabic = 'ربع كيلو';
-            else if (size === 'E') sizeArabic = 'ثمن كيلو';
-            else if (size === 'S') sizeArabic = 'صغير';
-            else if (size === 'M') sizeArabic = 'وسط';
-            else if (size === 'L') sizeArabic = 'كبير';
+            let sizeArabic = size === 'S' ? 'صغير' : (size === 'M' ? 'وسط' : 'كبير');
 
             if (priceNumEl) priceNumEl.innerText = selectedPrice;
             if (actionBtn) {
@@ -1871,24 +1834,13 @@
                 let ingredientsElement = item.desc ? `<span class="food-ingredients">${item.desc.trim()}</span>` : "";
 
                 if (!itemSizeSelection[item.id]) {
-                    itemSizeSelection[item.id] = item.isGrill ? 'K' : 'S';
+                    itemSizeSelection[item.id] = 'S';
                 }
                 const currentSize = itemSizeSelection[item.id];
-                const currentPrice = item.prices[currentSize] || item.prices.S || item.prices.K;
+                const currentPrice = item.hasSizes ? item.prices[currentSize] : item.prices.S;
 
                 let customOptionsHtml = "";
-                if (item.isGrill) {
-                    customOptionsHtml = `
-                    <div class="custom-options-container">
-                        <span class="option-title">الوزن:</span>
-                        <div class="simple-option-pills">
-                            <button type="button" class="simple-pill-btn ${currentSize === 'K' ? 'active' : ''}" data-size="K" onclick="setPizzaSize(${item.id}, 'K')">كيلو</button>
-                            <button type="button" class="simple-pill-btn ${currentSize === 'H' ? 'active' : ''}" data-size="H" onclick="setPizzaSize(${item.id}, 'H')">نص</button>
-                            <button type="button" class="simple-pill-btn ${currentSize === 'Q' ? 'active' : ''}" data-size="Q" onclick="setPizzaSize(${item.id}, 'Q')">ربع</button>
-                            <button type="button" class="simple-pill-btn ${currentSize === 'E' ? 'active' : ''}" data-size="E" onclick="setPizzaSize(${item.id}, 'E')">ثمن</button>
-                        </div>
-                    </div>`;
-                } else if (item.hasSizes) {
+                if (item.hasSizes) {
                     customOptionsHtml = `
                     <div class="custom-options-container">
                         <span class="option-title">الحجم:</span>
@@ -1920,16 +1872,8 @@
                 const btnClass = isDisabled ? "add-btn out-of-stock-mode" : "add-btn";
                 const disabledAttr = isDisabled ? "disabled" : "";
                 
-                let initialSizeArabic = "";
-                if (currentSize === 'K') initialSizeArabic = 'كيلو';
-                else if (currentSize === 'H') initialSizeArabic = 'نص كيلو';
-                else if (currentSize === 'Q') initialSizeArabic = 'ربع كيلو';
-                else if (currentSize === 'E') initialSizeArabic = 'ثمن كيلو';
-                else if (currentSize === 'S') initialSizeArabic = 'صغير';
-                else if (currentSize === 'M') initialSizeArabic = 'وسط';
-                else if (currentSize === 'L') initialSizeArabic = 'كبير';
-
-                const sizeDataAttr = (item.hasSizes || item.isGrill) ? `حجم ${initialSizeArabic}` : "";
+                let initialSizeArabic = currentSize === 'S' ? 'صغير' : (currentSize === 'M' ? 'وسط' : 'كبير');
+                const sizeDataAttr = item.hasSizes ? `حجم ${initialSizeArabic}` : "";
                 
                 const cardClass = isWideCat ? "food-card banner-card" : "food-card compact-card";
 
