@@ -1146,7 +1146,7 @@
 
         function requestNotificationPermission() {
             if ("Notification" in window) {
-                Notification.requestPermission();
+                Notification.permission === "granted" || Notification.requestPermission();
             }
         }
 
@@ -1685,8 +1685,13 @@
 
                     let cleanItemName = itemName.toLowerCase();
                     let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
+                    let isPigeonItem = cleanItemName.includes("حمام") || cleanItemName.includes("الحمام");
 
-                    let hasMultipleSizes = (pM > 0) || (pL > 0) || isRiceItem;
+                    if (isPigeonItem) {
+                        pS = 200;
+                    }
+
+                    let hasMultipleSizes = ((pM > 0) || (pL > 0) || isRiceItem) && !isPigeonItem;
 
                     parsedMenu.push({
                         id: i,
@@ -1696,8 +1701,8 @@
                         hasSizes: hasMultipleSizes,
                         prices: { 
                             S: pS, 
-                            M: pM || (isRiceItem ? pS + 10 : pS), 
-                            L: pL || (isRiceItem ? pS + 20 : pS) 
+                            M: isPigeonItem ? 200 : (pM || (isRiceItem ? pS + 10 : pS)), 
+                            L: isPigeonItem ? 200 : (pL || (isRiceItem ? pS + 20 : pS)) 
                         }
                     });
                 }
