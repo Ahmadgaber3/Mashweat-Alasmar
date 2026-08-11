@@ -1,0 +1,22 @@
+{
+  "name": "مشويات الأسمر",
+  "short_name": "مشويات الأسمر",
+  "description": "المنيو الرسمي لمشويات الأسمر - أسرع توصيل",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3f1e9",
+  "theme_color": "#e55300",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./images/logooo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./images/logooo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

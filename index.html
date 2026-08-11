@@ -1642,7 +1642,6 @@
             return lines;
         }
 
-        /* قراءة الشيت وتحليل أرقام الخانات D, E, F كأحجام */
         async function loadMenuFromSheet(isBackgroundSync = false) {
             if (!SHEET_CSV_URL) return;
 
@@ -1687,7 +1686,6 @@
                     let cleanItemName = itemName.toLowerCase();
                     let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
 
-                    // التعرف التلقائي على الأحجام المتعددة عند وجود أسعار بالخانات أو إذا كان أصناف الأرز
                     let hasMultipleSizes = (pM > 0) || (pL > 0) || isRiceItem;
 
                     parsedMenu.push({
@@ -1796,7 +1794,6 @@
             updateCart();
         }
 
-        /* دالة تبديل الحجم والأسعار عند الضغط على الأزرار الثلاثة */
         function setPizzaSize(itemId, size) {
             itemSizeSelection[itemId] = size;
             const item = menuData.find(i => i.id === itemId);
@@ -1829,7 +1826,6 @@
 
             const cleanCatName = cat ? cat.trim() : "";
             
-            // تحديد أول قسمين ديناميكياً ليتم عرض كروتهم بالبُنر العريض 2.2:1
             const allCategories = [...new Set(menuData.map(item => item.category))];
             const firstTwoCategories = allCategories.slice(0, 2);
             const isWideCat = firstTwoCategories.includes(cleanCatName) || cleanCatName === "المشويات" || cleanCatName === "الوجبات";
