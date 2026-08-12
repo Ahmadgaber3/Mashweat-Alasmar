@@ -1699,11 +1699,16 @@
                     }
 
                     let cleanItemName = itemName.toLowerCase();
-                    let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
+                    let isRiceWithLiver = cleanItemName.includes("رز بالكبده") || cleanItemName.includes("ارز بالكبده") || cleanItemName.includes("أرز بالكبده");
+                    let isRiceItem = (cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز")) && !isRiceWithLiver;
                     let isPigeonItem = cleanItemName.includes("فرد حمام") || cleanItemName.includes("حمام");
 
-                    // إلغاء الأحجام لصنف فرد حمام وجعله بسعر واحد فقط
-                    let hasMultipleSizes = ((pM > 0) || (pL > 0) || isRiceItem) && !isPigeonItem;
+                    if (isRiceWithLiver && pS === 0) {
+                        pS = 70;
+                    }
+
+                    // إلغاء الأحجام لصنف فرد حمام ورز بالكبده وجعلهما بسعر واحد فقط
+                    let hasMultipleSizes = ((pM > 0) || (pL > 0) || isRiceItem) && !isPigeonItem && !isRiceWithLiver;
 
                     parsedMenu.push({
                         id: i,
