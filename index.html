@@ -1058,10 +1058,25 @@
         const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzWw1rzq3IkC5cp3t-PJ2vlRj6xL01H_8M99bM7ONUsAe2XnOtH0FTwZKF2wX83GJ9gLUjb_Gcja9E/pub?output=csv";
 
         const DELIVERY_ZONES = [
-            { name: "بورتوفيق", price: 15 },
-            { name: "وسط البلد - السويس", price: 20 },
-            { name: "حي الأربعين", price: 25 },
-            { name: "حي الفيصل / الصباح", price: 30 },
+            { name: "بورتوفيق", price: 20 },
+            { name: "ممشي", price: 25 },
+            { name: "حوض الدرس", price: 25 },
+            { name: "السويس", price: 30 },
+            { name: "الاربعين", price: 30 },
+            { name: "حي الكويت", price: 40 },
+            { name: "السادات", price: 40 },
+            { name: "الألبان", price: 40 },
+            { name: "شارع ناصر", price: 40 },
+            { name: "24 اكتوبر", price: 40 },
+            { name: "العبور", price: 40 },
+            { name: "المميز", price: 40 },
+            { name: "المستقبل", price: 50 },
+            { name: "الموشي", price: 50 },
+            { name: "السلام", price: 60 },
+            { name: "عرب المعمل", price: 60 },
+            { name: "احمد زويل", price: 60 },
+            { name: "الملك عبدالله", price: 60 },
+            { name: "التوفيقيه", price: 60 },
             { name: "منطقة أخرى (يتحدد مع المطعم)", price: 0, custom: true }
         ];
 
@@ -1146,7 +1161,7 @@
 
         function requestNotificationPermission() {
             if ("Notification" in window) {
-                Notification.requestPermission();
+                Notification.permission !== "granted" && Notification.requestPermission();
             }
         }
 
@@ -1685,8 +1700,10 @@
 
                     let cleanItemName = itemName.toLowerCase();
                     let isRiceItem = cleanItemName.includes("ارز") || cleanItemName.includes("أرز") || cleanItemName.includes("رز");
+                    let isPigeonItem = cleanItemName.includes("فرد حمام") || cleanItemName.includes("حمام");
 
-                    let hasMultipleSizes = (pM > 0) || (pL > 0) || isRiceItem;
+                    // إلغاء الأحجام لصنف فرد حمام وجعله بسعر واحد فقط
+                    let hasMultipleSizes = ((pM > 0) || (pL > 0) || isRiceItem) && !isPigeonItem;
 
                     parsedMenu.push({
                         id: i,
